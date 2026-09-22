@@ -1,7 +1,13 @@
-﻿namespace JobBoard.API.Queries
+﻿using JobBoard.Application.Interfaces;
+using JobBoard.Domain.Entities;
+
+namespace JobBoard.API.Queries
 {
 	public class Query
 	{
-		public string GetMessage() => "Hello, World! My GraphQL API is working!";
+		public IQueryable<Job> GetJobs([Service] IJobRepository jobRepository)
+		{
+			return jobRepository.GetAllJobs();
+		}
 	}
 }

@@ -1,5 +1,7 @@
 using JobBoard.API.Queries;
+using JobBoard.Application.Interfaces;
 using JobBoard.Infrastructure.Data;
+using JobBoard.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,17 @@ builder.Services.AddGraphQLServer().AddQueryType<Query>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add db context
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+
 var app = builder.Build();
+
+// Seeding
+using (var scope = app.Services.CreateScope())
+{
+	var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	await AppDbContextSeeder.SeedAsync(context);
+}
 
 // Configure the HTTP request pipeline.
 //app.UseCors("AllowGraphQLUI");
