@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="JobBoard.API/JobBoard.API.csproj" />
+  <Project Path="JobBoard.Application/JobBoard.Application.csproj" />
+  <Project Path="JobBoard.Domain/JobBoard.Domain.csproj" />
+  <Project Path="JobBoard.Infrastructure/JobBoard.Infrastructure.csproj" />
+</Solution>
