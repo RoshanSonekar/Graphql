@@ -25,11 +25,13 @@ builder.Services.AddGraphQLServer()
 	.AddSorting()
 	.AddProjections();
 
+// Add db context
 builder.Services.AddDbContext<AppDbContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add db context
+// Add service
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobRepositoryMutation,  JobRepositoryMutation>();
 
 var app = builder.Build();
 
