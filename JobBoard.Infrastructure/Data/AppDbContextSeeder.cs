@@ -30,10 +30,10 @@ namespace JobBoard.Infrastructure.Data
 			// Add Users 
 			var users = new List<User>
 			{
-				new User { Name="Roshan", Email="Roshan@gmail.com"},
-				new User { Name="Adira", Email="Adira@gmail.com"},
-				new User { Name="Pooja", Email="Pooja@gmail.com"},
-				new User { Name="Rohit", Email="Rohit@gmail.com"}
+				new User { Name="Roshan", Email="Roshan@gmail.com", Password=BCrypt.Net.BCrypt.HashPassword("Roshan123")},
+				new User { Name="Adira", Email="Adira@gmail.com", Password=BCrypt.Net.BCrypt.HashPassword("Adira123")},
+				new User { Name="Pooja", Email="Pooja@gmail.com", Password=BCrypt.Net.BCrypt.HashPassword("Pooja123")},
+				new User { Name="Rohit", Email="Rohit@gmail.com", Password=BCrypt.Net.BCrypt.HashPassword("Rohit123")}
 			};
 			await context.Users.AddRangeAsync(users);
 			await context.SaveChangesAsync();

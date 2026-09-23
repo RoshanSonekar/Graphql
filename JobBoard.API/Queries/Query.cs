@@ -11,6 +11,10 @@ namespace JobBoard.API.Queries
 		[UseSorting]
 		public IQueryable<Job> GetJobs([Service] IJobRepository jobRepository)
 		{
+			string str = BCrypt.Net.BCrypt.HashPassword("Roshan@#$12345");
+			str = BCrypt.Net.BCrypt.HashPassword("Adira@#$12345");
+			str = BCrypt.Net.BCrypt.HashPassword("Pooja@#$12345");
+			str = BCrypt.Net.BCrypt.HashPassword("Rohit@#$12345"); 
 			return jobRepository.GetAllJobs();
 		}
 

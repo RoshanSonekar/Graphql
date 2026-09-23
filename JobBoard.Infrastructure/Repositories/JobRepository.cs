@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobBoard.Infrastructure.Repositories;
 
-public class JobRepository :IJobRepository
+public class JobRepository : IJobRepository
 {
 	private readonly AppDbContext appDbContext;
-	public JobRepository(AppDbContext _appDbContext) 
+	public JobRepository(AppDbContext _appDbContext)
 	{
 		appDbContext = _appDbContext;
 	}
 
 	public IQueryable<Job> GetAllJobs()
 	{
-		return appDbContext.Jobs.Include(e=> e.Company).OrderBy(o=> o.Id);
+		return appDbContext.Jobs.Include(e => e.Company).OrderBy(o => o.Id);
 	}
 	public async Task<Job?> GetJobById(int id)
 	{
@@ -27,15 +27,20 @@ public class JobRepository :IJobRepository
 	public IQueryable<JobApplication> GetApplicationsByJob(int jobId)
 	{
 		return appDbContext.Applications
-			.Where(a=> a.JobId == jobId)
-			.OrderBy(a=> a.Id);
+			.Where(a => a.JobId == jobId)
+			.OrderBy(a => a.Id);
 	}
 
 	public IQueryable<Job> GetJobByCompanyId(int companyId)
 	{
 		return appDbContext.Jobs
 			.Include(j => j.Company)
-			.Where(j=> j.CompanyId == companyId)
-			.OrderBy(j=> j.Id);
+			.Where(j => j.CompanyId == companyId)
+			.OrderBy(j => j.Id);
+	}
+
+	public async Task<User?> GetUserByEmail(string email)
+	{ 
+		return await appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 	}
 }
