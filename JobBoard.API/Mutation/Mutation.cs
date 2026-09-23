@@ -8,6 +8,15 @@ namespace JobBoard.API.Mutation
 		// Add Job
 		public async Task<Job> AddJob(AddJobRequest addJobRequest, [Service] IJobRepositoryMutation jobRepositoryMutation)
 		{
+			if (string.IsNullOrWhiteSpace(addJobRequest.Title))
+				throw new GraphQLException("Title is required.");
+			if (string.IsNullOrWhiteSpace(addJobRequest.Location))
+				throw new GraphQLException("Location is required.");
+			if (string.IsNullOrWhiteSpace(addJobRequest.JobType))
+				throw new GraphQLException("Job type is required");
+			if (addJobRequest.Salary <= 0)
+				throw new GraphQLException("Salary is required.");
+
 			var job = new Job()
 			{
 				Title=addJobRequest.Title,
@@ -26,6 +35,9 @@ namespace JobBoard.API.Mutation
 		// Apply for an existing job by the user 
 		public async Task<JobApplication> AppyForJob(AddJobApplication addJobApplicationRequest, [Service] IJobRepositoryMutation jobRepositoryMutation)
 		{
+			if (addJobApplicationRequest.JobId<=0 || addJobApplicationRequest.UserId<=0)
+				throw new GraphQLException("Job id and user id are required."); 
+
 			var jobApplication = new JobApplication()
 			{
 				JobId = addJobApplicationRequest.JobId,
@@ -39,8 +51,11 @@ namespace JobBoard.API.Mutation
 
 		}
 
+		// Update job application status
 		public async Task<JobApplication> UpdateApplicationStatus(int applicationId, string status, [Service] IJobRepositoryMutation jobRepositoryMutation) 
 		{
+			if (string.IsNullOrEmpty(status))
+				throw new GraphQLException("Status is required.");
 			return await jobRepositoryMutation.UpdateApplicationStatus(applicationId, status);
 		}
 	}

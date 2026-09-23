@@ -23,6 +23,10 @@ public class JobRepositoryMutation : IJobRepositoryMutation
 
 	public async Task<JobApplication> AddApplication(JobApplication jobApplication)
 	{ 
+		var application =  await appDbContext.Applications.FirstOrDefaultAsync(x=> x.JobId== jobApplication.JobId && x.UserId==jobApplication.UserId);
+		if (application != null)
+			throw new Exception($"Application exist provided job {jobApplication.JobId} for user {jobApplication.UserId}");
+
 		appDbContext.Applications.Add(jobApplication);
 		await appDbContext.SaveChangesAsync();
 
@@ -40,4 +44,4 @@ public class JobRepositoryMutation : IJobRepositoryMutation
 
 		return application;
 	}
-}
+}	

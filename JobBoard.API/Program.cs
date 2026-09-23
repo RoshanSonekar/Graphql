@@ -3,7 +3,10 @@ using JobBoard.API.Queries;
 using JobBoard.Application.Interfaces;
 using JobBoard.Infrastructure.Data;
 using JobBoard.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,13 +22,31 @@ var builder = WebApplication.CreateBuilder(args);
 //	});
 //});
 
+// Add JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options =>
+	{
+		options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			ValidIssuer = builder.Configuration["JWTSetting:Issuer"],
+			ValidAudience = builder.Configuration["JWTSetting:Audience"],
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSetting:Key"]!))
+		};
+	});
+builder.Services.AddAuthorization();
+
 // Add services to the container.
 builder.Services.AddGraphQLServer()
 	.AddQueryType<Query>()
 	.AddMutationType<Mutation>()
 	.AddFiltering()
 	.AddSorting()
-	.AddProjections();
+	.AddProjections()
+	.AddAuthorization();
 
 // Add db context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -34,6 +55,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add service
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobRepositoryMutation,  JobRepositoryMutation>();
+
+
 
 var app = builder.Build();
 
@@ -44,7 +67,10 @@ using (var scope = app.Services.CreateScope())
 	await AppDbContextSeeder.SeedAsync(context);
 }
 
+
 // Configure the HTTP request pipeline.
+app.UseAuthentication();
+app.UseAuthorization();
 //app.UseCors("AllowGraphQLUI");
 app.MapGraphQL();
 
