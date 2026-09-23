@@ -1,3 +1,4 @@
+using JobBoard.API.Mutation;
 using JobBoard.API.Queries;
 using JobBoard.Application.Interfaces;
 using JobBoard.Infrastructure.Data;
@@ -21,6 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGraphQLServer()
 	.AddQueryType<Query>()
+	.AddMutationType<Mutation>()
 	.AddFiltering()
 	.AddSorting()
 	.AddProjections();
