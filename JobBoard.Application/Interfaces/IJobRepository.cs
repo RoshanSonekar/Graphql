@@ -9,4 +9,6 @@ public interface IJobRepository
 	IQueryable<Job> GetJobByCompanyId(int companyId);
 	IQueryable<JobApplication> GetApplicationsByJob(int jobId);
 	Task<User?> GetUserByEmail(string email);
+
+	Task<User> GetUsersRefreshToken(string refreshToken);
 }

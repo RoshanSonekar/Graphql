@@ -1,5 +1,7 @@
+using JobBoard.API.Exceptions;
 using JobBoard.API.Mutation;
 using JobBoard.API.Queries;
+using JobBoard.API.Subscriptions;
 using JobBoard.Application.Interfaces;
 using JobBoard.Infrastructure.Data;
 using JobBoard.Infrastructure.Repositories;
@@ -39,10 +41,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	});
 builder.Services.AddAuthorization();
 
+builder.Services.AddErrorFilter<GraphQlErrorFilters>();
+
 // Add services to the container.
 builder.Services.AddGraphQLServer()
 	.AddQueryType<Query>()
 	.AddMutationType<Mutation>()
+	.AddSubscriptionType<Subscription>()
+	.AddInMemorySubscriptions()
 	.AddFiltering()
 	.AddSorting()
 	.AddProjections()
@@ -72,6 +78,6 @@ using (var scope = app.Services.CreateScope())
 app.UseAuthentication();
 app.UseAuthorization();
 //app.UseCors("AllowGraphQLUI");
+app.UseWebSockets();
 app.MapGraphQL();
-
 app.Run();

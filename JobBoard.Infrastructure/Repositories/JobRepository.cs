@@ -43,4 +43,9 @@ public class JobRepository : IJobRepository
 	{ 
 		return await appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 	}
+
+	public async Task<User?> GetUsersRefreshToken(string refreshToken)
+	{
+		return await appDbContext.Users.FirstOrDefaultAsync(u=> u.RefreshToken == refreshToken);
+	}
 }

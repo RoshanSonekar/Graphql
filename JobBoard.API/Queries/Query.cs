@@ -18,9 +18,13 @@ namespace JobBoard.API.Queries
 			return jobRepository.GetAllJobs();
 		}
 
-		public async Task<Job?> GetJob(int jobId, [Service] IJobRepository jobRepository)
+		public async Task<Job> GetJob(int jobId, [Service] IJobRepository jobRepository)
 		{
-			return await jobRepository.GetJobById(jobId);
+			var job=  await jobRepository.GetJobById(jobId);
+			if (job is null)
+				throw new GraphQLException($"Job for given id {jobId} not found.");
+			
+			return job;
 		}
 
 		[UseFiltering]

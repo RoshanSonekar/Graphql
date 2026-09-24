@@ -44,4 +44,15 @@ public class JobRepositoryMutation : IJobRepositoryMutation
 
 		return application;
 	}
+
+	public async Task UpdateRefreshToken(int userId, string refreshToken, DateTime refreshTokenExpiry)
+	{
+		var user = await appDbContext.Users.FirstOrDefaultAsync(u=> u.Id == userId);
+		if (user is null)
+			throw new Exception($"User with id {userId} not exist.");
+
+		user.RefreshToken = refreshToken;
+		user.RefreshTokenExpiry = refreshTokenExpiry;
+		await appDbContext.SaveChangesAsync();
+	}
 }	

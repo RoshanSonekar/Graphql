@@ -9,4 +9,6 @@ public interface IJobRepositoryMutation
 	Task<JobApplication> AddApplication(JobApplication jobApplication);
 
 	Task<JobApplication> UpdateApplicationStatus(int applicationId, string status);
+
+	Task UpdateRefreshToken(int userId, string refreshToken, DateTime refreshTokenExpiry);
 }
